@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include "util.h"
+// #include "util.h"
 // dados = 6
 int dados[101][5] = {
 
@@ -107,8 +107,8 @@ int dados[101][5] = {
 };
 
 int main(){
-    printf("TESTE\n");
-    LIST_ITEM_LINHA* lista_entrada =  nova_lista_de_item();
-    
+    // CONTROLE_ITEM_LINHA* controle_lista =  nova_lista_de_item();
+    // for (int i =0; i <101;i++) append_linha(controle_lista, dados[i]);
+    // printf("%d\n", controle_lista->lista->proximo->proximo->proximo->proximo->x_vetor[0]);
     return 1;
 }
