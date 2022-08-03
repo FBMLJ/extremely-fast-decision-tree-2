@@ -1,34 +1,35 @@
-#include <stdlib.h>
-#include "util.h"
+#include"util.h"
+#include<stdlib.h>
+#include<stdio.h>
+#define NUM_LABEL 3
 
 
+// ATRIBUTO _criar_instancia_de_atributo(){
 
-CONTROLE_ITEM_LINHA* nova_lista_de_item(){
-    CONTROLE_ITEM_LINHA* controle = (CONTROLE_ITEM_LINHA*)malloc(sizeof(CONTROLE_ITEM_LINHA));
-    controle->quantidade = 0;
-    controle->lista = NULL;
-    return controle;
+// }
+
+
+ATRIBUTO** criar_instancia_de_atributos(){
+    
+
+    ATRIBUTO** vetor = (ATRIBUTO**) malloc(sizeof(ATRIBUTO*)*4);
+    for (int i=0;i<4;i++)
+        vetor[i] = (ATRIBUTO*)malloc(sizeof(ATRIBUTO));
+    vetor[0]->numero_de_valor_distinto = 24;
+    int* vetor1 =(int*) malloc(sizeof(int)*24);
+    // int vetor1[24] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23};
+    for (int i =0;i < 24;i++) vetor1[i] = i;
+    vetor[0]->vetor = vetor1;
+    return vetor;
 }
 
-
-void append_linha(CONTROLE_ITEM_LINHA*  controle, int* linha){
-    controle->quantidade ++;
-    LIST_ITEM_LINHA* novo_item = (LIST_ITEM_LINHA*) malloc(sizeof(LIST_ITEM_LINHA));
-    novo_item->label = linha[4];
-    novo_item->x_vetor[0] = linha[0];
-    novo_item->x_vetor[1] = linha[1];
-    novo_item->x_vetor[2] = linha[2];
-    novo_item->x_vetor[3] = linha[3];
-    
-    if (controle->lista == NULL) {
-        controle-> lista = novo_item;
-        return;
-    }
-    LIST_ITEM_LINHA* atual = controle->lista;
-    while(atual->proximo != NULL) atual = atual-> proximo;
-    atual->proximo = novo_item;
-
-    
-    // LIST_ITEM_LINHA* lista = controle->lista;
+CONTADOR* novo_contador(ATRIBUTO* at , int pos){
+    CONTADOR *novo_contador = (CONTADOR*) malloc(sizeof(CONTADOR));
+    novo_contador->atributo = at;
+    novo_contador-> pos = pos;
+    int quantidade_de_valores = NUM_LABEL*at->numero_de_valor_distinto;
+    novo_contador->vetor = (int*) malloc(sizeof(int)*quantidade_de_valores);
+    for (int i = 0; i < quantidade_de_valores;i++)novo_contador->vetor[i] = 0;
+    novo_contador->tamanho = quantidade_de_valores;
+    return novo_contador;
 }
-

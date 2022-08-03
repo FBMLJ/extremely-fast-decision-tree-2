@@ -1,16 +1,20 @@
-
-typedef struct lista_encadeada_linha {
-    int x_vetor[4];
-    int label;
-    lista_encadeada_linha* proximo;
-} LIST_ITEM_LINHA;
-
-typedef struct controle_de_lista_linha {
-    int  quantidade ;
-    LIST_ITEM_LINHA* lista;
-} CONTROLE_ITEM_LINHA;
-
-CONTROLE_ITEM_LINHA* nova_lista_de_item();
+typedef struct atributo
+{
+    int numero_de_valor_distinto;
+    int* vetor;
+} ATRIBUTO;
 
 
-void append_linha(CONTROLE_ITEM_LINHA*  lista, int* linha);
+
+
+typedef struct contador{
+    int *vetor;
+    int tamanho;
+    int pos;
+    ATRIBUTO *atributo;
+} CONTADOR;
+
+// ATRIBUTO _criar_instancia_de_atributo();
+ATRIBUTO** criar_instancia_de_atributos();
+
+CONTADOR* novo_contador(ATRIBUTO* at, int pos );
