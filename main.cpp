@@ -2680,21 +2680,12 @@ int main(){
     
     ATRIBUTO** atributos =  criar_instancia_de_atributos();
     ARVORE* arv = criar_arvore(atributos);
-    // CONTADOR* contador = novo_contador(atributos[0],0);
-
-    // printf("%d\n",atributos[0]->vetor[3]);
-
+    
     for (int i=0; i < 2671;i++){
 
         adiciona_na_arvore(dados[i], arv,atributos    );
-        // printf("---\n");
+        
     }
-    //     printf("%d,%d,%d,%d,%d\n", dados[i][0],dados[i][1],dados[i][2],dados[i][3],dados[i][4]);
-    // CONTROLE_ITEM_LINHA* controle_lista =  nova_lista_de_item();
 
-    // ATRIBUTO** lista_atributo = criar_instancia_de_atributos();
-    // printf("%d\n",lista_atributo[0]->numero_de_valor_distinto);
-    // for (int i =0; i <101;i++) append_linha(controle_lista, dados[i]);
-    // printf("%d\n", controle_lista->lista->proximo->proximo->proximo->proximo->x_vetor[0]);
-    return 1;
+
 }

@@ -1,5 +1,6 @@
 #include"util.h"
 #include<stdlib.h>
+#include<stdio.h>
 #include<math.h>
 #define NUMERO_ATRIBUTO 4
 #define NUM_LABEL 3
@@ -38,11 +39,7 @@ ATRIBUTO** criar_instancia_de_atributos(){
     vetor[3]->vetor = vetor4;
 
 
-    // // label
-    // vetor[4]->numero_de_valor_distinto = NUM_LABEL;
-    // int* vetor5 =(int*) malloc(sizeof(int)*NUM_LABEL);
-    // for (int i =0;i < NUM_LABEL;i++) vetor5[i] = i;
-    // vetor[4]->vetor = vetor5;
+   
 
     return vetor;
 }
@@ -86,12 +83,12 @@ void adiciona_no_contador(int id,int label, CONTADOR* contador, ATRIBUTO* at){
 
 }
 
-
+// calcula o criterio de divisão nesse caso information gain
 float calcula_information_gain(CONTADOR* contador, ATRIBUTO* atr){
     int maximo = 0;
     for (int i=0;i < contador->tamanho;i++)
         maximo = maximo +contador->vetor[i];
-    // printf("%d  ",maximo);
+    
     float information_gain = 0;
     for (int atr_id=0;atr_id < atr->numero_de_valor_distinto;atr_id++){
         float temp = 0;
@@ -113,18 +110,20 @@ float calcula_information_gain(CONTADOR* contador, ATRIBUTO* atr){
         
         information_gain -=((float)max_local/maximo)* temp ;
     }
-    // printf("  ");
+    
     if (information_gain ==0){
         return -1;
     }
-    // printf("%f   ", information_gain);
+    
     information_gain = 1-information_gain;
-    // printf("%f\n", information_gain);
+    
     return information_gain;   
 }
 float calcula_limite(int n){
     return sqrt(log(1/DELTA)/(2*n));
 }
+
+// realiza a inserção e o treinamento da arvore
 void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
     // caso não seja folha
     while(arv->id_atributo != -1){
@@ -142,7 +141,7 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
         adiciona_no_contador(id,label, arv->contador[atributo_atual], atributos[atributo_atual]);
         
     }
-
+    // calcula o criterio de divisão para arvore 
     float maior1 = -1, maior2 = -1;
     int id1=-1,id2=-1;
     for( int atributo_atual= 0; atributo_atual < NUMERO_ATRIBUTO; atributo_atual++ ){
@@ -159,9 +158,9 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
 
     }
     float dif = maior1 -maior2;
+    // realiza a divisão
     if (dif != 0 && dif> calcula_limite(arv->contador_de_elementos) && (id2 !=-1)){
-        // divisão aqui
-        
+        // printf("dividi %d",arv->contador_de_elementos);
         arv->id_atributo = id1;
         arv->filhos =(ARVORE**) malloc(sizeof(ARVORE*) * atributos[id1]->numero_de_valor_distinto);
         for(int i=0; i < NUMERO_ATRIBUTO;i++) 
@@ -177,3 +176,25 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
 
     return;
 }
+
+
+int predict(int *vetor, ARVORE * arv, ATRIBUTO ** atributos){
+//Serial.println("===");
+  while(arv->id_atributo != -1){
+        int id_do_filho = find_id(vetor[arv->id_atributo], atributos[arv->id_atributo]) ;
+        arv = arv->filhos[id_do_filho];
+        
+    }
+//    Serial.println("===");
+    int id = -1; int maior_valor = -1;
+    for(int label_id= 0; label_id < NUM_LABEL; label_id++){
+      int somatorio = 0;
+        for(int attr = 0; attr < atributos[2]->numero_de_valor_distinto; attr++){
+          somatorio += arv->contador[2]->vetor[atributos[2]->numero_de_valor_distinto*label_id + attr]; 
+        }
+       if (somatorio>maior_valor){
+        id = label_id; maior_valor = somatorio;}
+     }
+     return id;
+  
+  }

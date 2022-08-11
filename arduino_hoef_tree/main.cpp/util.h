@@ -32,4 +32,5 @@ ARVORE* criar_arvore(ATRIBUTO** atributos);
 void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO** atributos);
 
 
+int predict(int *vetor, ARVORE * arv, ATRIBUTO ** atributos);
 CONTADOR* novo_contador(ATRIBUTO* at, int pos );

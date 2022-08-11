@@ -124,7 +124,6 @@ float calcula_limite(int n){
 
 // realiza a inserção e o treinamento da arvore
 void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
-    // caso não seja folha
     while(arv->id_atributo != -1){
         int id_do_filho = find_id(vetor[arv->id_atributo], atributos[arv->id_atributo]) ;
         
@@ -158,8 +157,9 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
     }
     float dif = maior1 -maior2;
     // realiza a divisão
+//    Serial.println(dif);
     if (dif != 0 && dif> calcula_limite(arv->contador_de_elementos) && (id2 !=-1)){
-        Serial.println("Relizando a divisão");
+        Serial.println("Relizando a divisão ###################################");
         arv->id_atributo = id1;
         arv->filhos =(ARVORE**) malloc(sizeof(ARVORE*) * atributos[id1]->numero_de_valor_distinto);
         for(int i=0; i < NUMERO_ATRIBUTO;i++) 
@@ -175,3 +175,24 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
 
     return;
 }
+
+int predict(int *vetor, ARVORE * arv, ATRIBUTO ** atributos){
+//Serial.println("===");
+  while(arv->id_atributo != -1){
+        int id_do_filho = find_id(vetor[arv->id_atributo], atributos[arv->id_atributo]) ;
+        arv = arv->filhos[id_do_filho];
+        
+    }
+//    Serial.println("===");
+    int id = -1; int maior_valor = -1;
+    for(int label_id= 0; label_id < NUM_LABEL; label_id++){
+      int somatorio = 0;
+        for(int attr = 0; attr < atributos[2]->numero_de_valor_distinto; attr++){
+          somatorio += arv->contador[2]->vetor[atributos[2]->numero_de_valor_distinto*label_id + attr]; 
+        }
+       if (somatorio>maior_valor){
+        id = label_id; maior_valor = somatorio;}
+     }
+     return id;
+  
+  }

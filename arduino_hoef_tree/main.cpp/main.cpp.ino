@@ -2,7 +2,8 @@
 #include"util.h"
 #include <WiFi.h>
 #include <HTTPClient.h>
-int contador = 1;
+int contador = 0;
+#include<stdlib.h>
 ARVORE* arv;
 ATRIBUTO** atributos;
 
@@ -31,19 +32,45 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(500);
+  delay(200);
   
   contador++;
-  Serial.println(contador);
+//  Serial.println(contador);
   if (WiFi.status()  ==WL_CONNECTED){
       HTTPClient http;
       String serverpath = HOST_NAME + String(contador);
-      Serial.println(serverpath);
+
       http.begin(serverpath.c_str());
       int respCode = http.GET();
-      Serial.println(respCode);
       String payload = http.getString();
-      Serial.println(payload);
+      int controlador = 9, atual = 0;
+      int* vetor = (int*) malloc(sizeof(int)*5);
+      String temp = "";
+      while (payload[controlador] != '}'){
+        if (payload[controlador] == ',' || payload[controlador] == ']'){
+
+          vetor[atual++] = temp.toInt();
+          temp ="";  
+        } else
+        temp += payload[controlador];
+        controlador++;
+       }
+//       Serial.println(vetor[0]);
+//       Serial.println(vetor[1]);
+//       Serial.println(vetor[2]);
+//       Serial.println(vetor[3]);
+//       Serial.println(vetor[4]);
+//       Serial.println(contador);
+//       Serial.println("---");
+       int valor_previsto = predict(vetor,arv,atributos);
+//       Serial.print(vetor[4]);
+      Serial.print(valor_previsto);
+       Serial.print(" , ");
+       Serial.println(vetor[4]);
+//       Serial.print(" , ");
+//       Serial.println(vetor[4] == valor_previsto);
+       adiciona_na_arvore(vetor,arv,atributos);
+       free(vetor);
       http.end();
 
     }
