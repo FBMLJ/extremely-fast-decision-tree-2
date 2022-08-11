@@ -160,7 +160,7 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
     float dif = maior1 -maior2;
     // realiza a divisão
     if (dif != 0 && dif> calcula_limite(arv->contador_de_elementos) && (id2 !=-1)){
-        // printf("dividi %d",arv->contador_de_elementos);
+        printf("dividi %d\n",arv->contador_de_elementos);
         arv->id_atributo = id1;
         arv->filhos =(ARVORE**) malloc(sizeof(ARVORE*) * atributos[id1]->numero_de_valor_distinto);
         for(int i=0; i < NUMERO_ATRIBUTO;i++) 
