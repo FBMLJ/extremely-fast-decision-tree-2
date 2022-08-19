@@ -34,4 +34,5 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO** atributos);
 
 CONTADOR* novo_contador(ATRIBUTO* at, int pos );
 
-int predict(int *vetor, ARVORE * arv, ATRIBUTO ** atributos);
+int predicao(int *vetor, ARVORE * arv, ATRIBUTO ** atributos);
+int calcula_memoria(ARVORE *arv,ATRIBUTO** atributos);

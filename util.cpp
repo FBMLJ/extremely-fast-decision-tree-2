@@ -4,7 +4,7 @@
 #include<math.h>
 #define NUMERO_ATRIBUTO 4
 #define NUM_LABEL 3
-#define DELTA 0.2
+#define DELTA 0.5
 
 
 // criando os atributos
@@ -123,14 +123,55 @@ float calcula_limite(int n){
     return sqrt(log(1/DELTA)/(2*n));
 }
 
+void free_arvore(ARVORE* arv){
+
+}
+
 // realiza a inserção e o treinamento da arvore
 void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
     // caso não seja folha
     while(arv->id_atributo != -1){
+        float maior1 = -1, maior2 = -1;
+         int id1=-1,id2=-1;
+
+         ////////
+        for( int atributo_atual= 0; atributo_atual < NUMERO_ATRIBUTO; atributo_atual++ ){
+            float temp = calcula_information_gain(arv->contador[atributo_atual], atributos[atributo_atual]);
+            if (temp > maior1) {
+                maior2 = maior1;
+                id2 = id1;
+                maior1 = temp;
+                id1 = atributo_atual;
+            } else if (temp>maior2){
+                maior2 = temp;
+                id2 = atributo_atual;
+            }
+
+        }
+        if (id1 != arv->id_atributo){
+            arv->id_atributo = id1;
+            free(arv->filhos);
+            // printf("Volta\n");
+            arv->filhos =(ARVORE**) malloc(sizeof(ARVORE*) * atributos[id1]->numero_de_valor_distinto);
+                
+            for (int i=0; i< atributos[id1]->numero_de_valor_distinto;i++ ){
+                arv->filhos[i] = criar_arvore(atributos);
+            }
+            continue;
+        }
+        arv->contador_de_elementos ++;
+        // adicionando elemento no contador
+        int label = vetor[NUMERO_ATRIBUTO];
+        for( int atributo_atual= 0; atributo_atual < NUMERO_ATRIBUTO; atributo_atual++ ){
+            int valor = vetor[atributo_atual];
+            int id = find_id(valor, atributos[atributo_atual]);
+            adiciona_no_contador(id,label, arv->contador[atributo_atual], atributos[atributo_atual]);
+            
+        }
+
+        ////////
         int id_do_filho = find_id(vetor[arv->id_atributo], atributos[arv->id_atributo]) ;
-        
         arv = arv->filhos[id_do_filho];
-        
     }
     arv->contador_de_elementos ++;
     // adicionando elemento no contador
@@ -160,11 +201,9 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
     float dif = maior1 -maior2;
     // realiza a divisão
     if (dif != 0 && dif> calcula_limite(arv->contador_de_elementos) && (id2 !=-1)){
-        printf("dividi %d\n",arv->contador_de_elementos);
+        // printf("dividi %d  %d\n",arv->contador_de_elementos,id1);
         arv->id_atributo = id1;
         arv->filhos =(ARVORE**) malloc(sizeof(ARVORE*) * atributos[id1]->numero_de_valor_distinto);
-        for(int i=0; i < NUMERO_ATRIBUTO;i++) 
-            free(arv->contador[i]) ;
                 
         for (int i=0; i< atributos[id1]->numero_de_valor_distinto;i++ ){
             arv->filhos[i] = criar_arvore(atributos);
@@ -178,7 +217,12 @@ void adiciona_na_arvore(int *vetor, ARVORE* arv, ATRIBUTO **atributos){
 }
 
 
-int predict(int *vetor, ARVORE * arv, ATRIBUTO ** atributos){
+
+
+
+
+
+int predicao(int *vetor, ARVORE * arv, ATRIBUTO ** atributos){
 //Serial.println("===");
   while(arv->id_atributo != -1){
         int id_do_filho = find_id(vetor[arv->id_atributo], atributos[arv->id_atributo]) ;
@@ -198,3 +242,25 @@ int predict(int *vetor, ARVORE * arv, ATRIBUTO ** atributos){
      return id;
   
   }
+
+int calcula_memoria(ARVORE *arv,ATRIBUTO** atributos){
+    int somatorio = sizeof(ARVORE);
+    if (arv->id_atributo == -1){
+        for(int j = 0; j < NUMERO_ATRIBUTO; j++){
+            somatorio+= arv->contador[j]->tamanho*sizeof(int);
+        }
+    }
+    else{
+        for(int j = 0; j < NUMERO_ATRIBUTO; j++){
+            somatorio+= arv->contador[j]->tamanho*sizeof(int);
+            // printf("%d\n", somatorio);
+        }
+        for(int j=0; j < atributos[arv->id_atributo]->numero_de_valor_distinto;j++){
+            if (arv->id_atributo == -1){
+            }
+            somatorio += calcula_memoria(arv->filhos[j], atributos);
+        }
+
+    }
+    return somatorio;
+} 
